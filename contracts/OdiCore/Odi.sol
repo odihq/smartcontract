@@ -1,24 +1,19 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.5.4;
+pragma solidity 0.8.6;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/access/Ownable.sol";
 
 import "../utils/address.sol";
 
 contract ODITRC20Token is ERC20, Ownable {
     using Address for address;
 
-    string public name = "ODI";
-    string public symbol = "ODI";
-    uint8 public decimals = 18;
-    uint256 public INITIAL_SUPPLY = 100000000000000000000000000;
-
-    constructor() public {
-        _mint(msg.sender, INITIAL_SUPPLY);
+    constructor(uint256 initialSupply) ERC20("ODI", "ODI") {
+        _mint(msg.sender, initialSupply);
     }
 
-    function multisend(address[] calldata to, uint256[] calldata values)
+    function multisend(address[] memory to, uint256[] memory values)
         external
         onlyOwner
         returns (uint256)
