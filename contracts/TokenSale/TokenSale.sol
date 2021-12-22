@@ -7,15 +7,11 @@ import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "../utils/address.sol";
 
 interface ISWAP {
-    function transferFromTokenSale(address recipient, uint256 amount)
-        external
-        returns (bool);
+    function transferFromTokenSale(address recipient, uint256 amount) external;
 }
 
 interface IEXCHANGE {
-    function transferFromTokenSale(address recipient, uint256 amount)
-        external
-        returns (bool);
+    function transferFromTokenSale(address recipient, uint256 amount) external;
 }
 
 contract TokenSale is Ownable {
@@ -41,21 +37,13 @@ contract TokenSale is Ownable {
         ODI = IERC20(_odi);
     }
 
-    function _calcul(
-        uint256 a,
-        uint256 b,
-        uint256 precision
-    ) internal pure returns (uint256) {
-        return (a * (10**precision)) / b;
-    }
-
     function distribution(
         uint256 _amount,
         uint256 _coefficient,
         address _to
     ) external onlyOwner {
         bool distibutionToExchange = true;
-        uint256 swapAmount = _calcul(_amount, _coefficient, 18);
+        uint256 swapAmount = (_amount * _coefficient) / 10**18;
         uint256 exchangeAmount = _amount - swapAmount;
         if ((_coefficient / 10**18) == 1) {
             distibutionToExchange = false;
@@ -67,13 +55,25 @@ contract TokenSale is Ownable {
             "TokenSale::distribution: Amount more than token sale ODI balance"
         );
 
-        ODI.transfer(_to, swapAmount);
+        ODI.transfer(address(SWAP), swapAmount);
         SWAP.transferFromTokenSale(_to, swapAmount);
         emit EDistribution(address(SWAP), _to, swapAmount);
         if (distibutionToExchange) {
-            ODI.transfer(_to, exchangeAmount);
+            ODI.transfer(address(EXCHANGE), exchangeAmount);
             EXCHANGE.transferFromTokenSale(_to, exchangeAmount);
             emit EDistribution(address(EXCHANGE), _to, exchangeAmount);
         }
+    }
+
+    function setODIContract(address _odi) external onlyOwner {
+        ODI = IERC20(_odi);
+    }
+
+    function setSWAPContract(address _swap) external onlyOwner {
+        SWAP = ISWAP(_swap);
+    }
+
+    function setExchangeContract(address _exchange) external onlyOwner {
+        EXCHANGE = IEXCHANGE(_exchange);
     }
 }

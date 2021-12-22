@@ -4,9 +4,7 @@ pragma solidity 0.8.6;
 import "./BaseSwapExchange.sol";
 
 interface IEXCHANGE {
-    function transferFromTokenSale(address recipient, uint256 amount)
-        external
-        returns (bool);
+    function transferFromTokenSale(address recipient, uint256 amount) external;
 }
 
 contract Swap is BaseSwapExchange {
@@ -36,7 +34,7 @@ contract Swap is BaseSwapExchange {
         }
         uint256 swapAmount = _amount;
         if (distibutionToExchange == true) {
-            swapAmount = _calcul(_amount, _coefficient, 18);
+            swapAmount = (_amount * _coefficient) / 10**18;
             uint256 exchangeAmount = _amount - swapAmount;
             require(
                 ODI.balanceOf(address(this)) >= exchangeAmount,
@@ -48,5 +46,9 @@ contract Swap is BaseSwapExchange {
         _balances[_to] += swapAmount;
 
         emit TransferFrom(_from, _to, _amount);
+    }
+
+    function setExchangeContract(address _exchange) external onlyOwner {
+        EXCHANGE = IEXCHANGE(_exchange);
     }
 }

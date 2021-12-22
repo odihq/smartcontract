@@ -29,6 +29,14 @@ contract BaseSwapExchange is Ownable {
         _;
     }
 
+    function checkAccessTokenSale(address tokenSale)
+        external
+        view
+        returns (bool)
+    {
+        return _allowedAccessTokenSale[tokenSale];
+    }
+
     function addAllowedTokenSale(address tokenSale) external onlyOwner {
         _allowedAccessTokenSale[tokenSale] = true;
     }
@@ -47,13 +55,5 @@ contract BaseSwapExchange is Ownable {
 
     function balanceOf(address _owner) external view returns (uint256) {
         return _balances[_owner];
-    }
-
-    function _calcul(
-        uint256 a,
-        uint256 b,
-        uint256 precision
-    ) internal pure returns (uint256) {
-        return (a * (10**precision)) / b;
     }
 }
