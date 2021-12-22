@@ -21,6 +21,8 @@ contract BaseSwapExchange is Ownable {
         uint256 value
     );
 
+    event Withdrawal(address indexed to, uint256 value);
+
     modifier checkAllowedTokenSale() {
         require(
             _allowedAccessTokenSale[msg.sender] == true,
@@ -55,5 +57,14 @@ contract BaseSwapExchange is Ownable {
 
     function balanceOf(address _owner) external view returns (uint256) {
         return _balances[_owner];
+    }
+
+    function withdrawal(address _to, uint256 _amount) external onlyOwner {
+        require(
+            ODI.balanceOf(address(this)) >= _amount,
+            "Swap::withdrawal. Contract balance is not sufficient."
+        );
+        ODI.transfer(_to, _amount);
+        emit Withdrawal(_to, _amount);
     }
 }
