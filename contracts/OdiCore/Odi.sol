@@ -13,6 +13,10 @@ contract ODITRC20Token is ERC20, Ownable {
         _mint(msg.sender, initialSupply);
     }
 
+    function decimals() public view virtual override returns (uint8) {
+        return 4;
+    }
+
     function multisend(address[] memory to, uint256[] memory values)
         external
         onlyOwner

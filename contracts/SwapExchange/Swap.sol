@@ -29,12 +29,12 @@ contract Swap is BaseSwapExchange {
         uint256 senderBalance = _balances[_from];
         require(senderBalance >= _amount, "Swap:: Balance is not sufficient.");
         _balances[_from] -= _amount;
-        if ((_coefficient / 10**18) == 1) {
+        if ((_coefficient / 10**4) == 1) {
             distibutionToExchange = false;
         }
         uint256 swapAmount = _amount;
         if (distibutionToExchange == true) {
-            swapAmount = (_amount * _coefficient) / 10**18;
+            swapAmount = (_amount * _coefficient) / 10**4;
             uint256 exchangeAmount = _amount - swapAmount;
             require(
                 ODI.balanceOf(address(this)) >= exchangeAmount,

@@ -43,9 +43,9 @@ contract TokenSale is Ownable {
         address _to
     ) external onlyOwner {
         bool distibutionToExchange = true;
-        uint256 swapAmount = (_amount * _coefficient) / 10**18;
+        uint256 swapAmount = (_amount * _coefficient) / 10**4;
         uint256 exchangeAmount = _amount - swapAmount;
-        if ((_coefficient / 10**18) == 1) {
+        if ((_coefficient / 10**4) == 1) {
             distibutionToExchange = false;
         }
 
