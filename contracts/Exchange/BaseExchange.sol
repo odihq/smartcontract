@@ -62,7 +62,7 @@ contract BaseExchange is Ownable {
     function withdrawal(address _to, uint256 _amount) external onlyOwner {
         require(
             ODI.balanceOf(address(this)) >= _amount,
-            "Swap::withdrawal. Contract balance is not sufficient."
+            "Exchange::withdrawal. Contract balance is not sufficient."
         );
         ODI.transfer(_to, _amount);
         emit Withdrawal(_to, _amount);

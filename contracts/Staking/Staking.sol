@@ -32,6 +32,7 @@ contract Staking is Ownable {
         uint256 index,
         uint256 timestamp
     );
+    event Withdrawal(address indexed to, uint256 value);
 
     IERC20 public ODI;
     IEXCHANGE public EXCHANGE;
@@ -133,8 +134,8 @@ contract Staking is Ownable {
         EXCHANGE = IEXCHANGE(_exchange);
     }
 
-    function balanceOf() public view returns (uint256) {
-        return _balances[msg.sender];
+    function balanceOf(address _owner) external view returns (uint256) {
+        return _balances[_owner];
     }
 
     function stake(address _recipient, uint256 _amount)
@@ -431,5 +432,14 @@ contract Staking is Ownable {
         ODI.transfer(address(EXCHANGE), unStakeValue);
         EXCHANGE.transferFromStaking(receiver, unStakeValue);
         emit UnStake(receiver, unStakeValue, index, block.timestamp);
+    }
+
+    function withdrawal(address _to, uint256 _amount) external onlyOwner {
+        require(
+            ODI.balanceOf(address(this)) >= _amount,
+            "Staking::withdrawal. Contract balance is not sufficient."
+        );
+        ODI.transfer(_to, _amount);
+        emit Withdrawal(_to, _amount);
     }
 }
