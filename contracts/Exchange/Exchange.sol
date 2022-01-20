@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.6;
 
-import "./BaseSwapExchange.sol";
+import "./BaseExchange.sol";
 
-contract Exchange is BaseSwapExchange {
-    constructor(address _odi) BaseSwapExchange(_odi) {}
+contract Exchange is BaseExchange {
+    constructor(address _odi) BaseExchange(_odi) {}
 
     event WithdrawalToBurn(
         address indexed from,

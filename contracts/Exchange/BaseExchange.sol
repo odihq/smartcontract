@@ -4,7 +4,7 @@ pragma solidity 0.8.6;
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-contract BaseSwapExchange is Ownable {
+contract BaseExchange is Ownable {
     mapping(address => uint256) internal _balances;
 
     mapping(address => bool) internal _allowedAccessTokenSale;
@@ -15,7 +15,7 @@ contract BaseSwapExchange is Ownable {
         ODI = IERC20(_odi);
     }
 
-    event TransferFromTokenSale(
+    event TransferFromStaking(
         address indexed from,
         address indexed to,
         uint256 value
@@ -26,7 +26,7 @@ contract BaseSwapExchange is Ownable {
     modifier checkAllowedTokenSale() {
         require(
             _allowedAccessTokenSale[msg.sender] == true,
-            "SwapExchange:: TokenSale is not allowed for request."
+            "Exchange:: TokenSale is not allowed for request."
         );
         _;
     }
@@ -47,12 +47,12 @@ contract BaseSwapExchange is Ownable {
         _allowedAccessTokenSale[tokenSale] = false;
     }
 
-    function transferFromTokenSale(address _recipient, uint256 _amount)
+    function transferFromStaking(address _recipient, uint256 _amount)
         external
         checkAllowedTokenSale
     {
         _balances[_recipient] += _amount;
-        emit TransferFromTokenSale(msg.sender, _recipient, _amount);
+        emit TransferFromStaking(msg.sender, _recipient, _amount);
     }
 
     function balanceOf(address _owner) external view returns (uint256) {
