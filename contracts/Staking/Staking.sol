@@ -238,10 +238,7 @@ contract Staking is Ownable {
                     Stake memory currentStake = stakeholders[s].addressStakes[
                         st
                     ];
-                    if (
-                        currentStake.unlockTime < block.timestamp &&
-                        !currentStake.paidOut
-                    ) {
+                    if (!currentStake.paidOut) {
                         uint256 availableReward = _calculateStakeRewardForPeriod(
                                 currentStake
                             );
