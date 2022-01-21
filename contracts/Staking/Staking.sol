@@ -4,15 +4,11 @@ pragma solidity ^0.8.6;
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 
-import "../utils/address.sol";
-
 interface IEXCHANGE {
     function transferFromStaking(address recipient, uint256 amount) external;
 }
 
 contract Staking is Ownable {
-    using Address for address;
-
     event Staked(
         address indexed user,
         uint256 amount,
@@ -122,14 +118,6 @@ contract Staking is Ownable {
     }
 
     constructor(address _odi, address _exchange) {
-        require(
-            _odi.isContract(),
-            "Staking::setODIContractAddress: Address must be contract address"
-        );
-        require(
-            _exchange.isContract(),
-            "Staking::setExchangeContractAddress: Address must be contract address"
-        );
         ODI = IERC20(_odi);
         EXCHANGE = IEXCHANGE(_exchange);
     }
@@ -169,10 +157,6 @@ contract Staking is Ownable {
     }
 
     function setODIContractAddress(address _address) external onlyOwner {
-        require(
-            _address.isContract(),
-            "Staking::setODIContractAddress: Address must be contract address"
-        );
         ODI = IERC20(_address);
     }
 
