@@ -160,6 +160,10 @@ contract Staking is Ownable {
         ODI = IERC20(_address);
     }
 
+    function setExchangeContractAddress(address _address) external onlyOwner {
+        EXCHANGE = IEXCHANGE(_address);
+    }
+
     function setMinimumODItoStaking(uint256 _amount) external onlyOwner {
         require(
             _amount >= 0,
